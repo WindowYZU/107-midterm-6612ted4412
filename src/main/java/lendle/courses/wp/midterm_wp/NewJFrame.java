@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javafx.scene.AccessibleAttribute;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
@@ -101,9 +103,9 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             jButton1.setEnabled(false);
             //從 combobox 抓出被選到的項目，存到變數裡
-            String selectedItem="";
+            String SelectedItem=(String) jComboBox1.getSelectedItem();
             /////////////////////////////////////
-            URL url = new URL(selectedItem);
+            URL url = new URL(SelectedItem);
             String fileName = url.getFile();
             final File tempFile = File.createTempFile("tmp", fileName.substring(fileName.lastIndexOf(".")));
             progress = new ProgressDialog(this);
@@ -118,7 +120,10 @@ public class NewJFrame extends javax.swing.JFrame {
                         progress.setVisible(false);
                         jButton1.setEnabled(true);
                         //將下載好的項目加入到 jList 裡面
-                        
+                        String SelectedItem=(String) jComboBox1.getSelectedItem();
+                        DefaultListModel model = (DefaultListModel) jList1.getModel();
+                        model.addElement(SelectedItem);
+                        jList1.updateUI();
                         ////////////////////////////
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
@@ -126,8 +131,11 @@ public class NewJFrame extends javax.swing.JFrame {
                                 try {
                                     URL fileURL=tempFile.toURI().toURL();
                                     //利用 fileURL 將 image icon 加到 jLabel2
+                                ImageIcon icon=new ImageIcon(new URL("SelectedItem"));
+                                Image img=icon.getImage().getScaledInstance(120, 100, Image.SCALE_SMOOTH);
+                                ImageIcon icon2=new ImageIcon(img);
+                                jLabel2.setIcon(icon2);
                                     ////////////////////////////////////////
-                                    jList1.updateUI();
                                 } catch (Exception ex) {
                                     Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
                                 }
